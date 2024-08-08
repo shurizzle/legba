@@ -2,7 +2,6 @@ use async_ssh2_tokio::client::{AuthMethod, Client, ServerCheckMethod};
 
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 
 use crate::creds::Credentials;
@@ -15,7 +14,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    let ssh = Box::new(SSH::new());
+    let ssh = SSH::new();
     crate::plugins::manager::register("ssh", ssh.clone());
     crate::plugins::manager::register("sftp", ssh);
 }
@@ -35,7 +34,6 @@ impl SSH {
     }
 }
 
-#[async_trait]
 impl Plugin for SSH {
     fn description(&self) -> &'static str {
         "SSH/SFTP password and private key authentication."

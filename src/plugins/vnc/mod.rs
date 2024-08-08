@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use vnc::{PixelFormat, VncConnector};
 
@@ -14,7 +13,7 @@ use super::plugin::PayloadStrategy;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("vnc", Box::new(VNC::new()));
+    crate::plugins::manager::register("vnc", VNC::new());
 }
 
 #[derive(Clone)]
@@ -26,7 +25,6 @@ impl VNC {
     }
 }
 
-#[async_trait]
 impl Plugin for VNC {
     fn description(&self) -> &'static str {
         "VNC password authentication."

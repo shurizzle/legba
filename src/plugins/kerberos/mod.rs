@@ -3,7 +3,6 @@ use std::sync::{Arc, RwLock};
 use std::time::Duration;
 
 use ahash::HashSet;
-use async_trait::async_trait;
 use ctor::ctor;
 use kerberos_asn1::{AsRep, Asn1Object, KrbError};
 use kerberos_constants::error_codes;
@@ -23,7 +22,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("kerberos", Box::new(Kerberos::new()));
+    crate::plugins::manager::register("kerberos", Kerberos::new());
 }
 
 #[derive(Clone)]
@@ -131,7 +130,6 @@ impl Kerberos {
     }
 }
 
-#[async_trait]
 impl Plugin for Kerberos {
     fn description(&self) -> &'static str {
         "Kerberos 5 (pre)authentication and users enumeration."

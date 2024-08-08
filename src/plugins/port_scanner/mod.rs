@@ -1,7 +1,6 @@
 use std::net::{SocketAddr, ToSocketAddrs};
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use grabbers::grab_udp_banner;
 use tokio::net::UdpSocket;
@@ -20,7 +19,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("port.scanner", Box::new(PortScanner::new()));
+    crate::plugins::manager::register("port.scanner", PortScanner::new());
 }
 
 #[derive(Clone)]
@@ -154,7 +153,6 @@ impl PortScanner {
     }
 }
 
-#[async_trait]
 impl Plugin for PortScanner {
     fn description(&self) -> &'static str {
         "TCP and UDP ports scanner."

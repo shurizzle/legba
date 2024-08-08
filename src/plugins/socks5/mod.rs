@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 
 use crate::session::{Error, Loot};
@@ -14,7 +13,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("socks5", Box::new(Socks5::new()));
+    crate::plugins::manager::register("socks5", Socks5::new());
 }
 
 #[derive(Clone)]
@@ -32,7 +31,6 @@ impl Socks5 {
     }
 }
 
-#[async_trait]
 impl Plugin for Socks5 {
     fn description(&self) -> &'static str {
         "SOCKS5 password authentication."

@@ -3,7 +3,6 @@ use std::net::IpAddr;
 use std::sync::Arc;
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use tokio::sync::Mutex;
 use trust_dns_resolver::{config::*, AsyncResolver, TokioAsyncResolver};
@@ -22,7 +21,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("dns", Box::new(DNS::new()));
+    crate::plugins::manager::register("dns", DNS::new());
 }
 
 #[derive(Clone)]
@@ -159,7 +158,6 @@ impl DNS {
     }
 }
 
-#[async_trait]
 impl Plugin for DNS {
     fn description(&self) -> &'static str {
         "DNS subdomain enumeration."

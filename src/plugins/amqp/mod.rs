@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
@@ -17,7 +16,7 @@ const PROTOCOL_HEADER_091: &[u8] = &[b'A', b'M', b'Q', b'P', 0, 0, 9, 1];
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("amqp", Box::new(AMQP::new()));
+    crate::plugins::manager::register("amqp", AMQP::new());
 }
 
 #[derive(Clone)]
@@ -31,7 +30,6 @@ impl AMQP {
     }
 }
 
-#[async_trait]
 impl Plugin for AMQP {
     fn description(&self) -> &'static str {
         "AMQP password authentication (ActiveMQ, RabbitMQ, Qpid, JORAM and Solace)."

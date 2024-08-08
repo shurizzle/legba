@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
@@ -15,7 +14,7 @@ const CONNECTED_RESPONSE: &[u8] = &[67, 79, 78, 78, 69, 67, 84, 69, 68];
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("stomp", Box::new(STOMP::new()));
+    crate::plugins::manager::register("stomp", STOMP::new());
 }
 
 #[derive(Clone)]
@@ -27,7 +26,6 @@ impl STOMP {
     }
 }
 
-#[async_trait]
 impl Plugin for STOMP {
     fn description(&self) -> &'static str {
         "STOMP password authentication (ActiveMQ, RabbitMQ, HornetQ and OpenMQ)."

@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use ldap3::{LdapConnAsync, LdapConnSettings};
 
@@ -15,7 +14,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("ldap", Box::new(LDAP::new()));
+    crate::plugins::manager::register("ldap", LDAP::new());
 }
 
 #[derive(Clone)]
@@ -31,7 +30,6 @@ impl LDAP {
     }
 }
 
-#[async_trait]
 impl Plugin for LDAP {
     fn description(&self) -> &'static str {
         "LDAP password authentication."

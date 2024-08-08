@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use lazy_static::lazy_static;
 use sqlx::pool::PoolOptions;
@@ -26,8 +25,8 @@ lazy_static! {
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("mysql", Box::new(SQL::new(Flavour::My)));
-    crate::plugins::manager::register("pgsql", Box::new(SQL::new(Flavour::PG)));
+    crate::plugins::manager::register("mysql", SQL::new(Flavour::My));
+    crate::plugins::manager::register("pgsql", SQL::new(Flavour::PG));
 }
 
 #[derive(Clone, PartialEq, Eq, Debug, Hash)]
@@ -81,7 +80,6 @@ impl SQL {
     }
 }
 
-#[async_trait]
 impl Plugin for SQL {
     fn description(&self) -> &'static str {
         DESCRIPTIONS.get(&self.flavour).unwrap()

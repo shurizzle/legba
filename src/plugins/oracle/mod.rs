@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use sibyl as oracle;
 
@@ -14,7 +13,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("oracle", Box::new(Oracle::new()));
+    crate::plugins::manager::register("oracle", Oracle::new());
 }
 
 #[derive(Clone)]
@@ -30,7 +29,6 @@ impl Oracle {
     }
 }
 
-#[async_trait]
 impl Plugin for Oracle {
     fn description(&self) -> &'static str {
         "Oracle DB authentication."

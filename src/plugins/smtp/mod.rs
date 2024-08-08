@@ -1,7 +1,6 @@
 use std::time::Duration;
 
 use async_smtp::{authentication, SmtpClient, SmtpTransport};
-use async_trait::async_trait;
 use ctor::ctor;
 use tokio::io::BufStream;
 
@@ -16,7 +15,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("smtp", Box::new(SMTP::new()));
+    crate::plugins::manager::register("smtp", SMTP::new());
 }
 
 #[derive(Clone)]
@@ -32,7 +31,6 @@ impl SMTP {
     }
 }
 
-#[async_trait]
 impl Plugin for SMTP {
     fn description(&self) -> &'static str {
         "SMTP password authentication."

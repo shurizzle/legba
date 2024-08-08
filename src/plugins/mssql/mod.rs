@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
@@ -60,7 +59,7 @@ const MS_MAX_LEN: usize = 30;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("mssql", Box::new(MSSQL::new()));
+    crate::plugins::manager::register("mssql", MSSQL::new());
 }
 
 #[derive(Clone)]
@@ -72,7 +71,6 @@ impl MSSQL {
     }
 }
 
-#[async_trait]
 impl Plugin for MSSQL {
     fn description(&self) -> &'static str {
         "Microsoft SQL Server password authentication."

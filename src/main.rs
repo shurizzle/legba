@@ -26,10 +26,12 @@ pub(crate) use crate::session::Session;
 fn setup() -> Result<Options, session::Error> {
     if env::var_os("RUST_LOG").is_none() {
         // set `RUST_LOG=debug` to see debug logs
-        env::set_var(
-            "RUST_LOG",
-            "info,blocking=off,pavao=off,fast_socks5=off,actix_server=warn",
-        );
+        unsafe {
+            env::set_var(
+                "RUST_LOG",
+                "info,blocking=off,pavao=off,fast_socks5=off,actix_server=warn",
+            );
+        }
     }
 
     env_logger::builder()
@@ -92,7 +94,7 @@ async fn start_session(opts: Options) -> Result<(), session::Error> {
     let session = Session::new(opts.clone())?;
 
     // get selected plugin and configure it
-    let plugin = plugins::manager::setup(&session.options).map_err(|e| {
+    let mut plugin = plugins::manager::setup(&session.options).map_err(|e| {
         // set stop signal if the plugin failed to load
         session.set_stop();
         e
@@ -101,7 +103,7 @@ async fn start_session(opts: Options) -> Result<(), session::Error> {
     let start = time::Instant::now();
 
     // start plugin
-    plugins::manager::run(plugin, session.clone()).await?;
+    plugins::manager::run(unsafe { &mut *((&mut plugin) as *mut _) }, session.clone()).await?;
 
     let one_sec = time::Duration::from_secs(1);
     while !session.is_finished() {

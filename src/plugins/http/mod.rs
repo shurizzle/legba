@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use rand::seq::SliceRandom;
 use reqwest::{
@@ -31,13 +30,13 @@ const HTTP_PAYLOAD_VAR: &str = "{$payload}";
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("http", Box::new(HTTP::new(Strategy::Request)));
-    crate::plugins::manager::register("http.form", Box::new(HTTP::new(Strategy::Form)));
-    crate::plugins::manager::register("http.basic", Box::new(HTTP::new(Strategy::BasicAuth)));
-    crate::plugins::manager::register("http.ntlm1", Box::new(HTTP::new(Strategy::NLTMv1)));
-    crate::plugins::manager::register("http.ntlm2", Box::new(HTTP::new(Strategy::NLTMv2)));
-    crate::plugins::manager::register("http.enum", Box::new(HTTP::new(Strategy::Enumeration)));
-    crate::plugins::manager::register("http.vhost", Box::new(HTTP::new(Strategy::VHostEnum)));
+    crate::plugins::manager::register("http", HTTP::new(Strategy::Request));
+    crate::plugins::manager::register("http.form", HTTP::new(Strategy::Form));
+    crate::plugins::manager::register("http.basic", HTTP::new(Strategy::BasicAuth));
+    crate::plugins::manager::register("http.ntlm1", HTTP::new(Strategy::NLTMv1));
+    crate::plugins::manager::register("http.ntlm2", HTTP::new(Strategy::NLTMv2));
+    crate::plugins::manager::register("http.enum", HTTP::new(Strategy::Enumeration));
+    crate::plugins::manager::register("http.vhost", HTTP::new(Strategy::VHostEnum));
 }
 
 fn method_requires_payload(method: &Method) -> bool {
@@ -503,7 +502,6 @@ impl HTTP {
     }
 }
 
-#[async_trait]
 impl Plugin for HTTP {
     fn description(&self) -> &'static str {
         match self.strategy {

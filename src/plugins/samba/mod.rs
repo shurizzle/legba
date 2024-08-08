@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use pavao::{SmbClient, SmbCredentials, SmbDirentType, SmbOptions};
 use tokio::sync::Mutex;
@@ -22,7 +21,7 @@ lazy_static! {
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("smb", Box::new(SMB::new()));
+    crate::plugins::manager::register("smb", SMB::new());
 }
 
 #[derive(Clone)]
@@ -107,7 +106,6 @@ impl SMB {
     }
 }
 
-#[async_trait]
 impl Plugin for SMB {
     fn description(&self) -> &'static str {
         "Samba password authentication."

@@ -1,7 +1,6 @@
 use std::process::Stdio;
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 
 use crate::session::{Error, Loot};
@@ -14,7 +13,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("cmd", Box::new(Command::new()));
+    crate::plugins::manager::register("cmd", Command::new());
 }
 
 #[derive(Clone)]
@@ -54,7 +53,6 @@ impl Command {
     }
 }
 
-#[async_trait]
 impl Plugin for Command {
     fn description(&self) -> &'static str {
         "Command execution."

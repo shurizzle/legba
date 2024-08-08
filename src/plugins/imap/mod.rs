@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 
 use crate::session::{Error, Loot};
@@ -12,7 +11,7 @@ use crate::utils;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("imap", Box::new(IMAP::new()));
+    crate::plugins::manager::register("imap", IMAP::new());
 }
 
 #[derive(Clone)]
@@ -24,7 +23,6 @@ impl IMAP {
     }
 }
 
-#[async_trait]
 impl Plugin for IMAP {
     fn description(&self) -> &'static str {
         "IMAP password authentication."

@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 
 use crate::session::{Error, Loot};
@@ -12,7 +11,7 @@ use crate::creds::Credentials;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("scylla", Box::new(Scylla::new()));
+    crate::plugins::manager::register("scylla", Scylla::new());
 }
 
 #[derive(Clone)]
@@ -24,7 +23,6 @@ impl Scylla {
     }
 }
 
-#[async_trait]
 impl Plugin for Scylla {
     fn description(&self) -> &'static str {
         "ScyllaDB / Cassandra password authentication."

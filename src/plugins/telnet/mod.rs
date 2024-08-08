@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 
 use crate::creds::Credentials;
@@ -13,7 +12,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("telnet", Box::new(Telnet::new()));
+    crate::plugins::manager::register("telnet", Telnet::new());
 }
 
 #[derive(Clone)]
@@ -33,7 +32,6 @@ impl Telnet {
     }
 }
 
-#[async_trait]
 impl Plugin for Telnet {
     fn description(&self) -> &'static str {
         "Telnet password authentication."

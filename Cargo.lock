@@ -2530,7 +2530,6 @@ dependencies = [
  "async-pop",
  "async-smtp",
  "async-ssh2-tokio",
- "async-trait",
  "async_ftp",
  "base64 0.21.7",
  "chrono",

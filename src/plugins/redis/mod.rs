@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
@@ -13,7 +12,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("redis", Box::new(Redis::new()));
+    crate::plugins::manager::register("redis", Redis::new());
 }
 
 #[derive(Clone)]
@@ -27,7 +26,6 @@ impl Redis {
     }
 }
 
-#[async_trait]
 impl Plugin for Redis {
     fn description(&self) -> &'static str {
         "Redis legacy and ACL password authentication."

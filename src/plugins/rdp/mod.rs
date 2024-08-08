@@ -2,7 +2,6 @@ use std::net::SocketAddr;
 use std::net::TcpStream;
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use rdp::core::client::Connector;
 use rdp::core::gcc::KeyboardLayout;
@@ -17,7 +16,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("rdp", Box::new(RDP::new()));
+    crate::plugins::manager::register("rdp", RDP::new());
 }
 
 #[derive(Clone)]
@@ -33,7 +32,6 @@ impl RDP {
     }
 }
 
-#[async_trait]
 impl Plugin for RDP {
     fn description(&self) -> &'static str {
         "Microsoft Remote Desktop password authentication."

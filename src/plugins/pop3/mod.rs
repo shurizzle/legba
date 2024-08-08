@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 
 use crate::session::{Error, Loot};
@@ -14,7 +13,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("pop3", Box::new(POP3::new()));
+    crate::plugins::manager::register("pop3", POP3::new());
 }
 
 #[derive(Clone)]
@@ -28,7 +27,6 @@ impl POP3 {
     }
 }
 
-#[async_trait]
 impl Plugin for POP3 {
     fn description(&self) -> &'static str {
         "POP3 password authentication."

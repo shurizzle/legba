@@ -13,16 +13,19 @@ use crate::session::{Error, Session};
 use crate::Plugin;
 use crate::{report, Options};
 
-use super::plugin::PayloadStrategy;
+use super::plugin::{BoxPlugin, PayloadStrategy};
 
-type Inventory = BTreeMap<&'static str, Box<dyn Plugin>>;
+type Inventory = BTreeMap<&'static str, BoxPlugin>;
 
 lazy_static! {
     pub(crate) static ref INVENTORY: Mutex<Inventory> = Mutex::new(Inventory::new());
 }
 
-pub(crate) fn register(name: &'static str, plugin: Box<dyn Plugin>) {
-    INVENTORY.lock().unwrap().insert(name, plugin);
+pub(crate) fn register<T: Plugin + 'static>(name: &'static str, plugin: T) {
+    INVENTORY
+        .lock()
+        .unwrap()
+        .insert(name, BoxPlugin::new(plugin));
 }
 
 pub(crate) fn list() {
@@ -48,16 +51,15 @@ pub(crate) fn list() {
     }
 }
 
-pub(crate) fn setup(options: &Options) -> Result<&'static mut dyn Plugin, Error> {
+pub(crate) fn setup(options: &Options) -> Result<BoxPlugin, Error> {
     let plugin_name = if let Some(value) = options.plugin.as_ref() {
         value.to_string()
     } else {
         return Err("no plugin selected".to_owned());
     };
 
-    let plugin = match INVENTORY.lock().unwrap().remove(plugin_name.as_str()) {
-        Some(p) => Box::leak(p), // makes the plugin &'static
-        None => return Err(format!("{} is not a valid plugin name, run with --list-plugins to see the list of available plugins", plugin_name)),
+    let Some(mut plugin) = INVENTORY.lock().unwrap().remove(plugin_name.as_str()) else {
+        return Err(format!("{} is not a valid plugin name, run with --list-plugins to see the list of available plugins", plugin_name));
     };
 
     plugin.setup(options)?;
@@ -66,7 +68,7 @@ pub(crate) fn setup(options: &Options) -> Result<&'static mut dyn Plugin, Error>
 }
 
 pub(crate) async fn run(
-    plugin: &'static mut dyn Plugin,
+    plugin: &'static mut BoxPlugin,
     session: Arc<Session>,
 ) -> Result<(), Error> {
     let single = matches!(plugin.payload_strategy(), PayloadStrategy::Single);
@@ -102,7 +104,7 @@ pub(crate) async fn run(
 }
 
 async fn worker(
-    plugin: &dyn Plugin,
+    plugin: &BoxPlugin,
     unreachables: Arc<RwLock<HashSet<String>>>,
     session: Arc<Session>,
 ) {

@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 use mongodb::options::Credential;
 
@@ -12,7 +11,7 @@ use crate::creds::Credentials;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("mongodb", Box::new(MongoDB::new()));
+    crate::plugins::manager::register("mongodb", MongoDB::new());
 }
 
 #[derive(Clone)]
@@ -24,7 +23,6 @@ impl MongoDB {
     }
 }
 
-#[async_trait]
 impl Plugin for MongoDB {
     fn description(&self) -> &'static str {
         "MongoDB password authentication."

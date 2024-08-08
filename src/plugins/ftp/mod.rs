@@ -2,7 +2,6 @@ use async_ftp::FtpStream;
 
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 
 use crate::session::{Error, Loot};
@@ -14,7 +13,7 @@ use crate::creds::Credentials;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("ftp", Box::new(FTP::new()));
+    crate::plugins::manager::register("ftp", FTP::new());
 }
 
 #[derive(Clone)]
@@ -26,7 +25,6 @@ impl FTP {
     }
 }
 
-#[async_trait]
 impl Plugin for FTP {
     fn description(&self) -> &'static str {
         "FTP password authentication."

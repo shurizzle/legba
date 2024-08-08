@@ -1,7 +1,6 @@
 use paho_mqtt as mqtt;
 use std::time::Duration;
 
-use async_trait::async_trait;
 use ctor::ctor;
 
 use crate::session::{Error, Loot};
@@ -14,7 +13,7 @@ pub(crate) mod options;
 
 #[ctor]
 fn register() {
-    crate::plugins::manager::register("mqtt", Box::new(Mqtt::new()));
+    crate::plugins::manager::register("mqtt", Mqtt::new());
 }
 
 #[derive(Clone)]
@@ -32,7 +31,6 @@ impl Mqtt {
     }
 }
 
-#[async_trait]
 impl Plugin for Mqtt {
     fn description(&self) -> &'static str {
         "MQTT password authentication."
